@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Blue</string>
+    <string name="tab_text_1">Talk Here :D</string>
+    <string name="tab_text_2">Assistant config</string>
+    <string name="tab_text_3">App config</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="blue_webconfig_button">Open Blue configuration page</string>
+    <string name="change_blue_ip">Change Blue IP</string>
+    <string name="url_input_string">URL</string>
+    <string name="url_input_textview">Send a website to display :</string>
+
+</resources>
