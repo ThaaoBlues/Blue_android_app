@@ -256,10 +256,33 @@ public class main_fragment extends Fragment {
         builder.show();
     }
 
+    private void show_no_blue_access_popup() {
+        builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Unable to communicate with your assistant");
+
+        // Set up the buttons
+        builder.setPositiveButton("Change assistant IP", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                show_blue_ip_popup();
+            }
+        });
+        builder.setNegativeButton("Change to offline mode", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+
+        builder.show();
+    }
+
 
     private void sendMessage(final String msg) {
         //prepare JSON string
-        String json = "{ 'type' : 'voice_command', 'voice_command' : \"" + msg + "\", 'battery' : "+get_battery_level()+",'is_charging':"+is_charging()+" ";
+        String json = "{ \"type\" : \"voice_command\",\"voice_command\" : \"" + msg + "\", \"battery\" : "+get_battery_level()+",\"is_charging\" : "+is_charging()+" }";
         Log.d("MSG", json);
 
         final Handler handler = new Handler();
@@ -286,7 +309,7 @@ public class main_fragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            show_blue_ip_popup();
+                            show_no_blue_access_popup();
                         }
                     });
 
