@@ -45,6 +45,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private OfflineUtils offlineutils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +54,23 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        offlineutils = new OfflineUtils(MainActivity.this);
+
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
 
+        //init the config files if not already ignited
+        Utils utils = new Utils(MainActivity.this);
+        utils.check_init_config_file();
+        offlineutils.download_offline_files();
+
+        //notify user if offline mode activated
+        if(offlineutils.is_offline_mode_activated()){
+            Toast.makeText(MainActivity.this,"/!\\ Offline mode activated !",Toast.LENGTH_SHORT).show();
+        }
 
 
     }

@@ -38,7 +38,7 @@ public class main_fragment extends Fragment {
     private SpeechRecognizer speechRecognizer;
     private Utils utils;
     private OnlineUtils onlineutils;
-    private OfflineUtils offlineUtils;
+    private OfflineUtils offlineutils;
 
 
     public static main_fragment newInstance() {
@@ -63,12 +63,15 @@ public class main_fragment extends Fragment {
         //init utils constructors
         utils = new Utils(getActivity());
         onlineutils = new OnlineUtils(getActivity());
-        offlineUtils = new OfflineUtils(getActivity());
+        offlineutils = new OfflineUtils(getActivity());
 
 
         //get different components
         TextView recognized_text_view = root.findViewById(R.id.recognized_text_view);
         FloatingActionButton fab = root.findViewById(R.id.fab);
+
+        //init tts engine
+        offlineutils.init_tts();
 
 
         //=======================================
@@ -123,7 +126,11 @@ public class main_fragment extends Fragment {
             public void onResults(Bundle bundle) {
                 ArrayList<String> data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 recognized_text_view.setText(data.get(0));
-                onlineutils.sendMessage(data.get(0),"voice_command");
+                if(!offlineutils.is_offline_mode_activated()){
+                    onlineutils.sendMessage(data.get(0),"voice_command");
+                }else{
+                    offlineutils.process_voice_command(data.get(0));
+                }
             }
 
             @Override
@@ -155,6 +162,15 @@ public class main_fragment extends Fragment {
                 checkPermission();
                 recognized_text_view.setBackgroundColor(getResources().getColor(R.color.green));
                 speechRecognizer.startListening(speechRecognizerIntent);
+            }
+        });
+
+        fab.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                offlineutils.process_voice_command("test");
+                Toast.makeText(getActivity(),"Testing software...",Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
 

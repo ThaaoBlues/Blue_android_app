@@ -9,6 +9,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,15 +18,20 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import com.example.blue.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class OnlineUtils {
 
     private AlertDialog.Builder builder;
     private Activity activity;
     private Utils utils;
+    private OfflineUtils offlineutils;
 
     public OnlineUtils(Activity mActivity){
         activity = mActivity;
         utils = new Utils(activity);
+        offlineutils = new OfflineUtils(activity);
     }
 
     public boolean is_online() {
@@ -99,6 +105,17 @@ public class OnlineUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+                String json = utils.readFromFile(activity,"config.blue");
+                JSONObject parsed_json = null;
+                try {
+                    parsed_json = new JSONObject(json);
+                    parsed_json.remove("offline_mode");
+                    parsed_json.put("offline_mode",true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                utils.writeToFile(parsed_json.toString(),activity,"config.blue");
+                Toast.makeText(activity, "Offline mode activated.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -122,6 +139,7 @@ public class OnlineUtils {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+
             }
         });
 

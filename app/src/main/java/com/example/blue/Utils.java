@@ -25,6 +25,12 @@ public class Utils {
     }
 
 
+    public void check_init_config_file(){
+        if(readFromFile(activity,"config.blue") == ""){
+            writeToFile("{\"offline_mode\" : false }",activity,"config.blue");
+        }
+    }
+
     public boolean is_charging() {
 
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
