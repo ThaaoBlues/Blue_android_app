@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Blue</string>
+    <string name="tab_text_1">Parlez ici :D</string>
+    <string name="tab_text_2">Assistant</string>
+    <string name="tab_text_3">Application</string>
+    <string name="blue_webconfig_button">Ouvrir la page  de configuration de Blue</string>
+    <string name="change_blue_ip">Changer l\'ip de Blue</string>
+    <string name="url_input_string">URL</string>
+    <string name="url_input_textview">Envoyez un site internet à afficher :</string>
+    <string name="offline_mode">Mode hors-ligne</string>
+    <string name="success">Opération effectuée avec succés !</string>
+    <string name="open_website">J\'ai ouvert ce site internet dans ton navigateur.</string>
+    <string name="hour">Il est actuellement</string>
+    <string name="date">Nous sommes le</string>
+    <string name="activate_bubble">Activer la bulle</string>
+</resources>

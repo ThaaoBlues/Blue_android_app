@@ -16,9 +16,9 @@ import java.io.OutputStreamWriter;
 
 public class Utils {
 
-    private Activity activity;
+    private Context activity;
 
-    public Utils(Activity mActivity){
+    public Utils(Context mActivity){
 
         activity = mActivity;
 

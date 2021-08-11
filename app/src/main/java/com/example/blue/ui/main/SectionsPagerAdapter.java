@@ -1,6 +1,7 @@
 package com.example.blue.ui.main;
 
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -8,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.blue.FloatWidgetService;
+import com.example.blue.MainActivity;
 import com.example.blue.R;
 
 /**
@@ -41,7 +44,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 break;
 
             case 2:
-                fragment = new tab3_fragment();
+                Intent service_intent = new Intent(mContext, FloatWidgetService.class);
+                fragment = new tab3_fragment(service_intent);
                 break;
         }
         return fragment;

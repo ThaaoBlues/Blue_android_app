@@ -1,6 +1,7 @@
 package com.example.blue;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.speech.tts.TextToSpeech;
@@ -25,12 +26,12 @@ import java.util.Map;
 
 public class OfflineUtils {
 
-    private Activity activity;
+    private Context activity;
     private Utils utils;
     private static TextToSpeech tts = null;
 
 
-    public OfflineUtils(Activity mActivity){
+    public OfflineUtils(Context mActivity){
 
         activity = mActivity;
         utils = new Utils(activity);

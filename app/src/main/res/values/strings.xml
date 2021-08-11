@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Blue</string>
+    <string name="app_name" translatable="false">Blue</string>
     <string name="tab_text_1">Talk Here :D</string>
     <string name="tab_text_2">Assistant config</string>
     <string name="tab_text_3">App config</string>
@@ -17,4 +17,5 @@
     <string name="open_website">I have opened this website on your navigator</string>
     <string name="hour">It is currently</string>
     <string name="date">We are the </string>
+    <string name="activate_bubble">Activate bubble</string>
 </resources>

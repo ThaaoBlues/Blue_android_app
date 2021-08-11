@@ -160,20 +160,9 @@ public class main_fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 checkPermission();
-                recognized_text_view.setBackgroundColor(getResources().getColor(R.color.green));
                 speechRecognizer.startListening(speechRecognizerIntent);
             }
         });
-
-        fab.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                offlineutils.process_voice_command("test");
-                Toast.makeText(getActivity(),"Testing software...",Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
 
         return root;
     }

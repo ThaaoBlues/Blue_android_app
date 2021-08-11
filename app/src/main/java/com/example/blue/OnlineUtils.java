@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,11 +29,11 @@ import org.json.JSONObject;
 public class OnlineUtils {
 
     private AlertDialog.Builder builder;
-    private Activity activity;
+    private Context activity;
     private Utils utils;
     private OfflineUtils offlineutils;
 
-    public OnlineUtils(Activity mActivity){
+    public OnlineUtils(Context mActivity){
         activity = mActivity;
         utils = new Utils(activity);
         offlineutils = new OfflineUtils(activity);
@@ -186,10 +191,14 @@ public class OnlineUtils {
                     out.close();
                     s.close();
                 } catch (IOException e) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
                         public void run() {
-                            show_no_blue_access_popup();
+                            try{
+                                show_no_blue_access_popup();
+                            }catch (android.view.WindowManager.BadTokenException g){
+                                show_no_blue_access_popup_from_service();
+                            }
+
                         }
                     });
 
@@ -200,5 +209,80 @@ public class OnlineUtils {
         thread.start();
     }
 
+
+    private void show_no_blue_access_popup_from_service() {
+        builder = new AlertDialog.Builder(activity);
+
+        builder.setTitle("Unable to communicate with your assistant");
+
+        // Set up the buttons
+        builder.setPositiveButton("Change assistant IP", new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                show_blue_ip_popup_from_service();
+            }
+        });
+        builder.setNegativeButton("Change to offline mode", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+
+            }
+        });
+
+
+        AlertDialog alert = builder.create();
+        alert.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        alert.show();
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void show_blue_ip_popup_from_service() {
+        builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Enter Blue IP");
+        // Set up the input
+        final EditText input = new EditText(activity);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+
+        if (input.getParent() != null) {
+            ((ViewGroup) input.getParent()).removeView(input);
+        }
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                utils.writeToFile(input.getText().toString(), activity, "IP.Blue");
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                String json = utils.readFromFile(activity,"config.blue");
+                JSONObject parsed_json = null;
+                try {
+                    parsed_json = new JSONObject(json);
+                    parsed_json.remove("offline_mode");
+                    parsed_json.put("offline_mode",true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                utils.writeToFile(parsed_json.toString(),activity,"config.blue");
+                Toast.makeText(activity, "Offline mode activated.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        alert.show();
+
+    }
 
 }
