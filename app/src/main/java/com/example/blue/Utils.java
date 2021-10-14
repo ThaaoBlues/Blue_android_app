@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Calendar;
 
 public class Utils {
 
@@ -48,6 +49,21 @@ public class Utils {
         int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
         return level * 100 / (float)scale;
+    }
+
+    public String get_time(){
+        Calendar rightNow = Calendar.getInstance();
+        //int currentHourIn24Format = rightNow.get(Calendar.HOUR_OF_DAY); // return the hour in 24 hrs format (ranging from 0-23)
+
+        return Integer.toString(rightNow.get(Calendar.HOUR))+":"+ Integer.toString(rightNow.get(Calendar.MINUTE)); // return the hour in 12 hrs format (ranging from 0-11)
+
+    }
+
+    public String get_date(){
+        Calendar rightNow = Calendar.getInstance();
+
+        return Integer.toString(rightNow.get(Calendar.DAY_OF_MONTH))+"/"+ Integer.toString(rightNow.get(Calendar.MONTH))+"/"+Integer.toString(rightNow.get(Calendar.YEAR)); // return the hour in 12 hrs format (ranging from 0-11)
+
     }
 
 

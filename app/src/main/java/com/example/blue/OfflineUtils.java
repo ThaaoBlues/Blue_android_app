@@ -157,6 +157,8 @@ public class OfflineUtils {
             module = get_module_by_index(ret);
         }else if( ret2 != -1){
             module = get_module_by_index(ret2);
+            // to avoid different cases of return
+            ret = ret2;
         }else{
             //Not recognized sentence, ask if wanna talk or to connect full blue machine
             speak("Je ne sais pas encore faire cela.");
@@ -201,7 +203,7 @@ public class OfflineUtils {
                 break;
 
             case "heure":
-                say_hour(voice_command,ret);
+                say_time(voice_command,ret);
                 break;
 
             case "date":
@@ -346,8 +348,9 @@ public class OfflineUtils {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Uri uri = Uri.parse("http://www.google.com/#q=" + escapedQuery);
+        Uri uri = Uri.parse("http://www.google.com/search?q=" + escapedQuery);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
     }
 
@@ -357,8 +360,9 @@ public class OfflineUtils {
         voice_command = strip_voice_command(voice_command,module_index);
         voice_command = voice_command.replace(" ","");
 
-        Uri uri = Uri.parse(voice_command);
+        Uri uri = Uri.parse("http://www."+voice_command);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
 
     }
@@ -377,11 +381,11 @@ public class OfflineUtils {
     }
 
     private void say_date(String voice_command,int module_index){
-
+        speak(utils.get_date());
     }
 
-    private void say_hour(String voice_command,int module_index){
-
+    private void say_time(String voice_command,int module_index){
+        speak(utils.get_time());
     }
 
     private void twitch(String voice_command, int module_index){

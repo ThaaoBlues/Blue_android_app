@@ -194,6 +194,10 @@ public class FloatWidgetService extends Service implements View.OnClickListener 
                 }else{
                     offlineutils.process_voice_command(data.get(0));
                 }
+
+                // return the widget to a collapsed view
+                collapsedView.setVisibility(View.VISIBLE);
+                expandedView.setVisibility(View.GONE);
             }
 
             @Override
