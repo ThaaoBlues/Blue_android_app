@@ -152,6 +152,7 @@ public class OfflineUtils {
         int ret2 = full_sentences_ratio(voice_command);
         String response = "";
         String module = "";
+
         if(ret != -1){
             module = get_module_by_index(ret);
         }else if( ret2 != -1){
@@ -170,6 +171,41 @@ public class OfflineUtils {
                 break;
             case "google-search":
                 google_search(voice_command,ret);
+                break;
+
+            case "open_website":
+                open_website(voice_command,ret);
+
+            case "youtube":
+                youtube_search(voice_command,ret);
+                break;
+
+            case "say":
+                say(voice_command,ret);
+                break;
+
+            case "maps":
+                maps(voice_command,ret);
+                break;
+
+            case "camera":
+                open_camera(voice_command,ret);
+                break;
+
+            case "countdown":
+                countdown(voice_command,ret);
+                break;
+
+            case "twitch":
+                twitch(voice_command,ret);
+                break;
+
+            case "heure":
+                say_hour(voice_command,ret);
+                break;
+
+            case "date":
+                say_date(voice_command,ret);
                 break;
             default:
                 speak("Ce module n'est pas disponible " +
@@ -315,5 +351,50 @@ public class OfflineUtils {
         activity.startActivity(intent);
     }
 
+    private void open_website(String voice_command,int module_index){
+        //remove all unusefull words and chars
+        voice_command = voice_command.toLowerCase();
+        voice_command = strip_voice_command(voice_command,module_index);
+        voice_command = voice_command.replace(" ","");
+
+        Uri uri = Uri.parse(voice_command);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        activity.startActivity(intent);
+
+    }
+
+
+    private void youtube_search(String voice_command,int module_index){
+
+    }
+
+    private void say(String voice_command,int module_index){
+        speak(voice_command.replaceFirst(voice_command.split(" ")[0],""));
+    }
+
+    private void maps(String voice_command,int module_index){
+
+    }
+
+    private void say_date(String voice_command,int module_index){
+
+    }
+
+    private void say_hour(String voice_command,int module_index){
+
+    }
+
+    private void twitch(String voice_command, int module_index){
+
+    }
+
+    private void countdown(String voice_command, int module_index){
+
+    }
+
+    private void open_camera(String voice_comma,int module_index){
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        activity.startActivity(intent);
+    }
 
 }
