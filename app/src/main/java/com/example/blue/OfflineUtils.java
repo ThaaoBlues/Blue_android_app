@@ -148,11 +148,12 @@ public class OfflineUtils {
 
 
     public void process_voice_command(String voice_command){
-
         int ret = starred_sentences_ratio(voice_command);
         int ret2 = full_sentences_ratio(voice_command);
         String response = "";
         String module = "";
+
+        Log.d("ret",ret+"/"+ret2);
 
         if(ret != -1){
             module = get_module_by_index(ret);
@@ -239,19 +240,28 @@ public class OfflineUtils {
 
     private int starred_sentences_ratio(String voice_command){
         String[] sentences = get_sentences();
+
         //loop sentences
         for(int i = 0;i < sentences.length;i++){
             String[] sentences_decl = sentences[i].split("/");
             for(int j = 0; j < sentences_decl.length;j++) {
-                String[] starred_split = sentences_decl[j].split("[*]");
+                String[] starred_split = sentences_decl[j].split("\\*");
                 //loop sentences split by star (*)
                 for (int h = 0; h < starred_split.length; h++) {
-                    if (string_ratio(starred_split[h], voice_command) >= 80) {
+
+
+                    if(starred_split[h].length() <= 1){
+                        continue;
+                    }
+
+                    System.out.println(starred_split[h]);
+
+                    if (voice_command.contains(starred_split[h])) {
 
                         //return the right module index ( basically the line in the file)
                         // if arrived at end of the starred sentence and
                         // it still match
-                        if (j == starred_split.length - 1) {
+                        if (h == starred_split.length - 1) {
                             return i;
                         }
                     } else {
@@ -273,7 +283,8 @@ public class OfflineUtils {
             String[] sentences_decl = sentences[i].split("/");
             for(int j = 0; j < sentences_decl.length;j++){
                 if(string_ratio(sentences_decl[j],voice_command) > 68 ){
-                    Toast.makeText(activity,""+i,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(activity,""+i,Toast.LENGTH_SHORT).show();
+                    Log.d("module",get_module_by_index(i)+" ratio : "+string_ratio(sentences_decl[j],voice_command));
                     return i;
                 }
             }
@@ -321,16 +332,18 @@ public class OfflineUtils {
                 count ++;
             }
         }
-        Log.d("WORD",""+sentence+"!!"+voice_command);
-        Log.d("END","END WORD : "+count*100/(length));
 
         return count*100/(length);
 
     }
 
     private String strip_voice_command(String voice_command,int module_index){
-        String[] words = get_sentences()[module_index].split("/");
-        for(int i=0; i < words.length;i++){
+        String[] word_groups = get_sentences()[module_index].split("/");
+        String[] words = get_sentences()[module_index].split(" ");
+        for(int i=0; i < word_groups.length;i++){
+            voice_command = voice_command.replace(word_groups[i].replaceAll("[*]",""),"");
+        }
+        for(int i=0; i < word_groups.length;i++){
             voice_command = voice_command.replace(words[i].replaceAll("[*]",""),"");
         }
         return voice_command;
@@ -379,6 +392,13 @@ public class OfflineUtils {
 
     private void maps(String voice_command,int module_index){
 
+        voice_command = voice_command.toLowerCase();
+        voice_command = strip_voice_command(voice_command,module_index);
+
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q="+voice_command);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        activity.startActivity(mapIntent);
     }
 
     private void say_date(String voice_command,int module_index){
