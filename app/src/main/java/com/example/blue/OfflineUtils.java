@@ -1,6 +1,7 @@
 package com.example.blue;
 
 import android.app.Activity;
+import java.util.regex.*;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -390,9 +391,36 @@ public class OfflineUtils {
 
     private void twitch(String voice_command, int module_index){
 
+        voice_command = voice_command.toLowerCase();
+        voice_command = strip_voice_command(voice_command,module_index);
+
+        Uri uri = Uri.parse("http://www.twitch.tv/"+voice_command);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+
     }
 
     private void countdown(String voice_command, int module_index){
+        voice_command = strip_voice_command(voice_command,module_index);
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(voice_command);
+
+
+        if (matcher.find())
+        {
+            int count = Integer.getInteger(matcher.group(1));
+            for(int i=count;i>=0;i--){
+                speak(Integer.toString(i));
+                try{
+                    Thread.sleep(1000);
+                }catch (InterruptedException e){
+
+                }
+            }
+        }
+
+        speak("Désolé, je n'ai pas pu comprendre votre nombre.");
 
     }
 
